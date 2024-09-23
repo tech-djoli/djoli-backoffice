@@ -10,3 +10,4 @@ folium
 requests
 streamlit
 datetime
+googlemaps
