@@ -1,1 +1,11 @@
-
+pandas
+mysql-connector-python  # MySQL connector for Python (mysql.connector as connection)
+seaborn
+matplotlib
+numpy
+sshtunnel
+geopy
+ortools
+folium
+requests
+streamlit
