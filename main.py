@@ -6,11 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import numpy as np
 from sshtunnel import SSHTunnelForwarder
-from geopy.distance import geodesic  
-from ortools.constraint_solver import routing_enums_pb2
-from ortools.constraint_solver import pywrapcp
 import folium
-import requests
 import requests
 import json
 import streamlit as st
