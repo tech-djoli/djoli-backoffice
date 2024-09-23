@@ -251,21 +251,16 @@ route = nearest_neighbor_route(distance_matrix)
 # Get driving directions for the entire route (handling more than 25 waypoints)
 points = get_directions(route, df1)
 
-# Plot the route on a map with proper delivery numbering
-if points:
-    # Generate the Folium map
-    map_ = plot_route(df1, points, route)
+map_ = plot_route(df1, points, route)
     
-    # Display the Folium map in Streamlit using HTML
-    st.components.v1.html(map_._repr_html_(), height=500)
+# Display the Folium map in Streamlit using HTML
+st.components.v1.html(map_._repr_html_(), height=500)
 
-    delivery_list = generate_delivery_list(df1, route)
+delivery_list = generate_delivery_list(df1, route)
     
-    # Display the delivery list below the map
-    st.markdown("### Instructions de Livraison")
-    for delivery in delivery_list:
-        st.markdown(delivery)
+# Display the delivery list below the map
+st.markdown("### Instructions de Livraison")
+for delivery in delivery_list:
+    st.markdown(delivery)
 
-else:
-    st.write("Could not generate a valid polyline for the route.")
 
