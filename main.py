@@ -57,7 +57,7 @@ query = f"""
     JOIN shops s ON s.id = o.shop_id
     JOIN shop_translations st ON st.shop_id = s.id 
     JOIN districts d ON s.district_id = d.id 
-    WHERE o.delivery_date = '{formatted_date}'
+    WHERE o.delivery_date = '{date}'
     AND d.`zone` = '{zone}';
 """
 
