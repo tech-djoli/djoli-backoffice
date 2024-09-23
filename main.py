@@ -41,7 +41,7 @@ zone = st.selectbox(
     placeholder="Zone",
 )
 
-today = datetime.date.today()
+today = datetime.now()
 date = st.date_input("Selectionner un jour de livraison", today)
 
 query = """SELECT 
