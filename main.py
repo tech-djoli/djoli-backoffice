@@ -14,10 +14,16 @@ import math
 from datetime import datetime, timedelta
 import googlemaps
 
+SSH_USERNAME = st.secrets["SSH_USERNAME"]
+SSH_PASSWORD = st.secrets["SSH_PASSWORD"]
+DB_USER = st.secrets["DB_USER"]
+DB_PASSWORD = st.secrets["DB_PASSWORD"]
+GOOGLE_MAPS_API_KEY = st.secrets["GOOGLE_MAPS_API_KEY"]
+
 tunnel = SSHTunnelForwarder(
     ('31.207.38.195', 22),  
-    ssh_username="root",
-    ssh_password="Us9Gacz6rtG",
+    ssh_username=SSH_USERNAME,
+    ssh_password=SSH_PASSWORD,
     remote_bind_address=('127.0.0.1', 3306),
     allow_agent=False,  
     host_pkey_directories=[]  
@@ -28,8 +34,8 @@ tunnel.start()
 mydb = connection.connect(
     host='127.0.0.1',  
     database='backend',
-    user='djoli',
-    passwd='vmftza%WLfpc#cN@',
+    user=DB_USER,
+    passwd=DB_PASSWORD,
     port=tunnel.local_bind_port,  
     use_pure=True
 )
@@ -69,7 +75,7 @@ df1 = pd.read_sql(query,mydb)
 
 WAREHOUSE_LAT = 5.332637
 WAREHOUSE_LNG = -4.010748
-gmaps = googlemaps.Client(key='AIzaSyAtt8vThK0DTYrkYxdd88q8n4SUSwQlH2U')
+gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
 
 def preprocess_df(df):
     # Check if the warehouse has already been added
