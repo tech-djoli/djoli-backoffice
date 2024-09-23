@@ -11,7 +11,7 @@ import requests
 import json
 import streamlit as st
 import math
-import datetime, timedelta
+from datetime import datetime, timedelta
 import googlemaps
 
 tunnel = SSHTunnelForwarder(
