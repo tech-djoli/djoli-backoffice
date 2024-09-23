@@ -44,21 +44,23 @@ zone = st.selectbox(
 today = datetime.now()
 date = st.date_input("Selectionner un jour de livraison", today)
 
-query = """SELECT 
-    s.id,
-    st.title, 
-    REPLACE(JSON_UNQUOTE(JSON_EXTRACT(s.location, '$.latitude')), '"', '') AS Latitude,
-    REPLACE(JSON_UNQUOTE(JSON_EXTRACT(s.location, '$.longitude')), '"', '') AS Longitude,
-    o.total_price,
-    o.delivery_date,
-    o.delivery_time 
-FROM orders o
-JOIN shops s ON s.id = o.shop_id
-JOIN shop_translations st ON st.shop_id = s.id 
-JOIN districts d ON s.district_id = d.id 
-WHERE o.delivery_date = '{date}'
-AND d.`zone` = '{zone}';
+query = f"""
+    SELECT 
+        s.id,
+        st.title, 
+        REPLACE(JSON_UNQUOTE(JSON_EXTRACT(s.location, '$.latitude')), '"', '') AS Latitude,
+        REPLACE(JSON_UNQUOTE(JSON_EXTRACT(s.location, '$.longitude')), '"', '') AS Longitude,
+        o.total_price,
+        o.delivery_date,
+        o.delivery_time 
+    FROM orders o
+    JOIN shops s ON s.id = o.shop_id
+    JOIN shop_translations st ON st.shop_id = s.id 
+    JOIN districts d ON s.district_id = d.id 
+    WHERE o.delivery_date = '{formatted_date}'
+    AND d.`zone` = '{zone}';
 """
+
 
 df1 = pd.read_sql(query,mydb)
 
