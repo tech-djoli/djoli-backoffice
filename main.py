@@ -175,13 +175,17 @@ def get_directions(route, df):
 
 def plot_route(df, points, route):
     # Create a map centered at the warehouse with cartodbpositron background
+    # We will update the center and zoom after plotting the points
     m = folium.Map(location=[WAREHOUSE_LAT, WAREHOUSE_LNG], zoom_start=13, tiles="cartodbpositron")
     
     delivery_order = 1  # Counter for numbering deliveries
+    coordinates = []  # To store all coordinates for fitting bounds later
 
     # Add markers for each delivery point with popup information
     for stop in route:
         row = df.iloc[stop]
+        lat, lon = row['Latitude'], row['Longitude']
+        coordinates.append([lat, lon])  # Add coordinates to list for adjusting bounds
         
         # Popup content with custom CSS for increased width
         popup_content = f'''
@@ -195,14 +199,14 @@ def plot_route(df, points, route):
         # Warehouse (first point) is stop == 0, we don't number it.
         if stop == 0:
             folium.Marker(
-                location=[row['Latitude'], row['Longitude']],
+                location=[lat, lon],
                 popup=folium.Popup(popup_content, max_width=300),  # Adjust the max width as needed
                 icon=folium.Icon(color='red', icon='warehouse', prefix='fa')
             ).add_to(m)
         else:
             # For delivery points, we use the delivery_order counter for numbering with modern styling
             folium.Marker(
-                location=[row['Latitude'], row['Longitude']],
+                location=[lat, lon],
                 popup=folium.Popup(popup_content, max_width=300),  # Adjust the max width as needed
                 icon=folium.DivIcon(html=f'''
                     <div style="
@@ -227,6 +231,10 @@ def plot_route(df, points, route):
     # Plot the route on the map using the decoded points
     if points:
         folium.PolyLine([(p['lat'], p['lng']) for p in points], color='blue', weight=5, opacity=0.8).add_to(m)
+
+    # Adjust the zoom and center to fit all points
+    if coordinates:
+        m.fit_bounds(coordinates)  # Adjust zoom and center based on all delivery points
     
     return m
 
