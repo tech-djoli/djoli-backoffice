@@ -302,3 +302,16 @@ for delivery in delivery_list:
 
 delivery_df = pd.DataFrame(delivery_list)
 
+
+# Create a CSV buffer
+csv_buffer = io.StringIO()
+delivery_df.to_csv(csv_buffer, index=False)
+csv_data = csv_buffer.getvalue()
+
+# Create a download button for the delivery list as CSV
+st.download_button(
+    label="Télécharger la liste de livraison (CSV)",
+    data=csv_data,
+    file_name='delivery_list.csv',
+    mime='text/csv'
+)
