@@ -83,13 +83,18 @@ WAREHOUSE_LNG = -4.010748
 gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
 
 def preprocess_df(df):
-    # Check if the warehouse has already been added
+    # Drop rows where Latitude or Longitude is null or invalid
     df = df.dropna(subset=['Latitude', 'Longitude'])
     df = df[(df['Latitude'] != 'null') & (df['Longitude'] != 'null')]
-  
+
+    # Filter for orders with delivery_time up to 11:00 AM
+    df['delivery_time'] = pd.to_datetime(df['delivery_time'], format='%H:%M')  # Ensure the correct datetime format
+    cutoff_time = pd.to_datetime("11:00:00").time()  # Define the cutoff time (11:00 AM)
+    df = df[df['delivery_time'].dt.time <= cutoff_time]  # Filter based on delivery time
+    
+    # Check if the warehouse has already been added
     if not ((df['Latitude'] == WAREHOUSE_LAT) & (df['Longitude'] == WAREHOUSE_LNG)).any():
         # Create time windows for each delivery based on delivery_time
-        df['delivery_time'] = pd.to_datetime(df['delivery_time'], format='%H:%M')
         df['delivery_end_time'] = df['delivery_time'] + timedelta(minutes=30)
         
         # Add warehouse as the first point (starting point)
