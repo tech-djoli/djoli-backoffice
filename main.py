@@ -13,6 +13,7 @@ import streamlit as st
 import math
 from datetime import datetime, timedelta
 import googlemaps
+import io
 
 SSH_USERNAME = st.secrets["SSH_USERNAME"]
 SSH_PASSWORD = st.secrets["SSH_PASSWORD"]
@@ -278,16 +279,41 @@ route = nearest_neighbor_route(distance_matrix)
 # Get driving directions for the entire route (handling more than 25 waypoints)
 points = get_directions(route, df1)
 
+# Add custom CSS to reduce the space between components
+st.markdown("""
+    <style>
+    .css-1v3fvcr {  /* Targets the container for reducing space */
+        margin-top: -20px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Plot the map
 map_ = plot_route(df1, points, route)
-    
-# Display the Folium map in Streamlit using HTML
+
+# Display the map in Streamlit
 st.components.v1.html(map_._repr_html_(), height=500)
 
-delivery_list = generate_delivery_list(df1, route)
-    
 # Display the delivery list below the map
 st.markdown("### Instructions de Livraison")
+delivery_list = generate_delivery_list(df1, route)
 for delivery in delivery_list:
     st.markdown(delivery)
+
+delivery_df = pd.DataFrame(delivery_list)
+
+# Create a CSV buffer
+csv_buffer = io.StringIO()
+delivery_df.to_csv(csv_buffer, index=False)
+csv_data = csv_buffer.getvalue()
+
+# Create a download button for the delivery list CSV
+st.download_button(
+    label="Télécharger la liste de livraison (CSV)",
+    data=csv_data,
+    file_name='delivery_list.csv',
+    mime='text/csv'
+)
+
 
 
