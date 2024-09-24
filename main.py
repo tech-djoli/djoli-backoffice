@@ -302,9 +302,3 @@ for delivery in delivery_list:
 
 delivery_df = pd.DataFrame(delivery_list)
 
-# Add a "Print" button for downloading the entire Streamlit page as a PDF
-st.markdown("""
-    <button onclick="window.print()">Télécharger cette page en PDF</button>
-""", unsafe_allow_html=True)
-
-
