@@ -65,7 +65,8 @@ query = f"""
     JOIN districts d ON s.district_id = d.id 
     WHERE o.delivery_date = '{date}'
     AND d.`zone` = '{zone}'
-    AND o.shop_id != 43;
+    AND o.shop_id != 43
+    AND o.created_at < '{date} 03:00:00';
 """
 
 
