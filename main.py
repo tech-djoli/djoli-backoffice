@@ -242,19 +242,26 @@ def plot_route(df, points, route):
 
 def generate_delivery_list(df, route):
     delivery_list = []
+    
     for idx, stop in enumerate(route):
         if stop == 0:  # Skip warehouse
             continue
         
         row = df.iloc[stop]
+        lat, lon = row['Latitude'], row['Longitude']
         
-        # Format each delivery's details
+        # Create a clickable Google Maps link
+        maps_link = f"https://www.google.com/maps/search/?api=1&query={lat},{lon}"
+        
+        # Format each delivery's details with a clickable link
         delivery_info = f"""
         **Livraison {idx}:**
         - **Restaurant**: {row['title']}
         - **Heure de Livraison**: {row['delivery_time'].strftime('%H:%M')}
         - **Total Commande**: {int(row['total_price'])} FCFA
+        - [Voir sur Google Maps]({maps_link})
         """
+        
         delivery_list.append(delivery_info)
     
     return delivery_list
