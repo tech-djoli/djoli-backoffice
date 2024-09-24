@@ -41,7 +41,7 @@ mydb = connection.connect(
 )
 
 zone = st.selectbox(
-    "Selectionner une zone?",
+    "Selectionner une zone.",
     ("Zone 1", "Zone 2", "Zone 3", "Zone 4"),
     index=None,
     placeholder="Zone",
