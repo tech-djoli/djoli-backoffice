@@ -8,7 +8,7 @@ geopy
 ortools
 folium
 requests
-streamlit>=1.10.0
+streamlit==1.8.0
 datetime
 googlemaps
 streamlit-folium
