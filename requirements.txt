@@ -11,3 +11,4 @@ requests
 streamlit
 datetime
 googlemaps
+streamlit-folium
