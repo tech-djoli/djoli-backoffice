@@ -1,7 +1,6 @@
 import streamlit as st
 
 # Set page config for the entire app
-st.set_page_config(page_title="My Multipage App", page_icon="🌍", layout="wide")
 st.sidebar.header("Navigation.")
 
 st.title("Welcome to the Delivery and Customer Map App")
