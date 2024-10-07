@@ -7,8 +7,8 @@ import streamlit as st
 st.sidebar.header("Attempt")
 st.markdown("# Attempt")
 
-df_old = pd.read_csv('/Users/thomasgiannetti/Downloads/old_order_dates2.csv')
-df_new = pd.read_csv('/Users/thomasgiannetti/Downloads/new_order_dates3.csv')
+df_old = pd.read_csv('old_order_dates2.csv')
+df_new = pd.read_csv('new_order_dates3.csv')
 
 df_old['first_order_date'] = pd.to_datetime(df_old['first_order_date'], errors='coerce')
 df_new['first_order_date'] = pd.to_datetime(df_new['first_order_date'], errors='coerce')
