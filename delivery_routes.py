@@ -15,7 +15,6 @@ from datetime import datetime, timedelta
 import googlemaps
 import io
 
-st.set_page_config(page_title="Delivery Route", page_icon="📈")
 st.sidebar.header("Delivery Route")
 
 
