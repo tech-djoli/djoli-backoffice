@@ -3,6 +3,7 @@ import numpy as np
 import folium
 from folium.plugins import TimestampedGeoJson
 import streamlit as st 
+from streamlit_folium import folium_static
 
 st.sidebar.header("Attempt")
 st.markdown("# Attempt")
