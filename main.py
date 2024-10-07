@@ -15,8 +15,8 @@ from datetime import datetime, timedelta
 import googlemaps
 import io
 
-st.set_page_config(page_title="Plotting Demo", page_icon="📈")
-st.sidebar.header("Plotting Demo")
+st.set_page_config(page_title="Delivery Route", page_icon="📈")
+st.sidebar.header("Delivery Route")
 
 
 SSH_USERNAME = st.secrets["SSH_USERNAME"]
