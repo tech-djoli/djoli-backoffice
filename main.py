@@ -16,6 +16,8 @@ import googlemaps
 import io
 
 st.set_page_config(page_title="Plotting Demo", page_icon="📈")
+st.sidebar.header("Plotting Demo")
+
 
 SSH_USERNAME = st.secrets["SSH_USERNAME"]
 SSH_PASSWORD = st.secrets["SSH_PASSWORD"]
