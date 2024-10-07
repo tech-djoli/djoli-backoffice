@@ -5,8 +5,8 @@ from folium.plugins import TimestampedGeoJson
 import streamlit as st 
 from streamlit_folium import folium_static
 
-df_old = pd.read_csv('old_order_dates2.csv')
-df_new = pd.read_csv('new_order_dates3.csv')
+df_old = pd.read_csv('data/old_order_dates2.csv')
+df_new = pd.read_csv('data/new_order_dates3.csv')
 
 df_old['first_order_date'] = pd.to_datetime(df_old['first_order_date'], errors='coerce')
 df_new['first_order_date'] = pd.to_datetime(df_new['first_order_date'], errors='coerce')
