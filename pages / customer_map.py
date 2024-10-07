@@ -5,6 +5,9 @@ from folium.plugins import TimestampedGeoJson
 import streamlit as st 
 from streamlit_folium import folium_static
 
+st.set_page_config(page_title="Customer Map", page_icon="📊")
+
+
 df_old = pd.read_csv('data/old_order_dates2.csv')
 df_new = pd.read_csv('data/new_order_dates3.csv')
 
