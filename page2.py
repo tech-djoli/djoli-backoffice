@@ -50,3 +50,37 @@ df_result = df_result.loc[:, ~df_result.columns.duplicated()]
 
 df_result = df_result.dropna(subset=['latitude', 'longitude'])
 
+def create_map():
+  m = folium.Map(location=[5.345317, -4.024429], zoom_start=12)
+
+for index, row in df_result.iterrows():
+
+    iframe_content = (
+        f"<b>Restaurant:</b> {row['name']} <br>"
+        f"<b>Type:</b> {row['type']} <br><br>"
+        f"<b>First Order Date:</b> {row['first_order_date'].strftime('%Y-%m-%d')} <br>"
+        f"<b>Number of Orders:</b> {row['num_orders']} <br>"
+        f"<b>Total Sales:</b> {row['total_ordered']} <br>"
+    )
+
+    popup = folium.Popup(iframe_content, min_width=150, max_width=300)
+    
+    if row['type'] == "Formel":
+        marker_color = 'orange'
+    elif row['type'] == "Semi-Formel":
+        marker_color = 'green'
+    elif row['type'] == "Informel":
+        marker_color = 'black'
+    else:
+        marker_color = 'gray' 
+    
+    folium.Marker(location=[row['latitude'], row['longitude']], icon=folium.Icon(color=marker_color, icon='map-marker', prefix='fa'), popup=popup).add_to(m) 
+  return m
+
+map = create_map()
+
+st.title('Djoli Map of Customers - Abidjan')
+st.markdown('')
+st.markdown('**Click on a restaurant to find out more !**')
+   
+folium_static(map, width=750)
