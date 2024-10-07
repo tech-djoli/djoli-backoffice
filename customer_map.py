@@ -1,5 +1,4 @@
 import streamlit as st
-st.set_page_config(page_title="Attempt", page_icon="🌍")
 
 st.sidebar.header("Attempt")
 st.markdown("# Attempt")
