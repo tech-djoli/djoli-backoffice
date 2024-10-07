@@ -1,6 +1,7 @@
 import streamlit as st
-st.sidebar.header("Attempt")
 st.set_page_config(page_title="Attempt", page_icon="🌍")
+
+st.sidebar.header("Attempt")
 st.markdown("# Attempt")
 
 df_old = pd.read_csv('/Users/thomasgiannetti/Downloads/old_order_dates2.csv')
