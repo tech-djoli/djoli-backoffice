@@ -1,5 +1,7 @@
 import streamlit as st
 
+st.set_page_config(page_title="My Multipage App", page_icon="🌍", layout="wide")
+
 # Set page config for the entire app
 st.sidebar.header("Navigation.")
 
