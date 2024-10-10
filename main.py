@@ -3,7 +3,7 @@ import streamlit as st
 st.set_page_config(page_title="My Multipage App", page_icon="🌍", layout="wide")
 
 st.sidebar.header("Navigation")
-page = st.sidebar.selectbox("Go to", ["Main Page", "Delivery Routes", "Customer Map"])
+page = st.sidebar.selectbox("Go to", ["Main Page", "Delivery Routes", "Customer Map", "Producer Map"])
 
 if page == "Main Page":
     st.title("Welcome to the Delivery and Customer Map App")
