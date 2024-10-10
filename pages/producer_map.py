@@ -4,6 +4,7 @@ import folium
 import streamlit as st
 from streamlit_folium import folium_static
 
+st.set_page_config(page_title="Producer Map", page_icon="3️⃣")
 
 producers = pd.read_csv('data/producers.csv')
 
