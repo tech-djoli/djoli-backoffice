@@ -12,4 +12,4 @@ streamlit
 datetime
 googlemaps
 streamlit-folium
-sklearn
+scikit-learn
