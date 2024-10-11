@@ -13,3 +13,5 @@ datetime
 googlemaps
 streamlit-folium
 scikit-learn
+mlxtend
+pulp
