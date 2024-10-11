@@ -12,25 +12,29 @@ import re
 import pulp
 import streamlit as st
 
+SSH_USERNAME = st.secrets["SSH_USERNAME"]
+SSH_PASSWORD = st.secrets["SSH_PASSWORD"]
+DB_USER = st.secrets["DB_USER"]
+DB_PASSWORD = st.secrets["DB_PASSWORD"]
+GOOGLE_MAPS_API_KEY = st.secrets["GOOGLE_MAPS_API_KEY"]
+
 tunnel = SSHTunnelForwarder(
-    ('31.207.38.195', 22),  # SSH server and port
-    ssh_username="root",
-    ssh_password="Us9Gacz6rtG",
+    ('31.207.38.195', 22),
+    ssh_username=SSH_USERNAME,
+    ssh_password=SSH_PASSWORD,
     remote_bind_address=('127.0.0.1', 3306),
-    allow_agent=False,  # Disable SSH key authentication
-    host_pkey_directories=[]  # Disable default key file lookup
+    allow_agent=False,
+    host_pkey_directories=[]
 )
 
-# Start the SSH tunnel
 tunnel.start()
 
-# MySQL connection through the SSH tunnel
 mydb = connection.connect(
-    host='127.0.0.1',  # Localhost since we are tunneling
+    host='127.0.0.1',
     database='backend',
-    user='djoli',
-    passwd='vmftza%WLfpc#cN@',
-    port=tunnel.local_bind_port,  # Use the forwarded local port
+    user=DB_USER,
+    passwd=DB_PASSWORD,
+    port=tunnel.local_bind_port,
     use_pure=True
 )
 
