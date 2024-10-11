@@ -90,7 +90,7 @@ X = df[features]
 y = df[target]
 
 # One-hot encode categorical variables (day_of_week, type_establishment, order_type, cuisine, product_standard)
-encoder = OneHotEncoder(sparse=False)
+encoder = OneHotEncoder(sparse_output=False)
 
 # Cache the model training process so it only runs once
 @st.cache_resource
