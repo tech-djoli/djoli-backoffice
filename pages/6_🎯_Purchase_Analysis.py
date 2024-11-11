@@ -269,7 +269,61 @@ WHERE WEEK(p.created_at, 1) = WEEK('{comparison_date}',1)
 AND sm.type = 'purchase'
 AND sm.deleted_at IS NULL
 AND ps.id IN ({standard_ids_str})
-GROUP BY WEEKDAY(p.created_at), CEIL(DATEDIFF(p.created_at, '2023-01-01') / 7), ps.id;
+GROUP BY WEEKDAY(p.created_at), CEIL(DATEDIFF(p.created_at, '2023-01-01') / 7), ps.id
+
+
+UNION ALL
+
+SELECT
+    WEEKDAY(o.delivery_date) AS week_day,
+    CEIL(DATEDIFF(o.delivery_date, '2023-01-01') / 7) AS week,
+    ROUND(SUM(od.quantity * COALESCE(p.weight, 1))) AS total_weight,
+    ps.id AS standard_id,
+    ps.name AS standard_name,
+    CASE
+        WHEN WEEKDAY(o.delivery_date) = 0 THEN 'Lundi'
+        WHEN WEEKDAY(o.delivery_date) = 1 THEN 'Mardi'
+        WHEN WEEKDAY(o.delivery_date) = 2 THEN 'Mercredi'
+        WHEN WEEKDAY(o.delivery_date) = 3 THEN 'Jeudi'
+        WHEN WEEKDAY(o.delivery_date) = 4 THEN 'Vendredi'
+        WHEN WEEKDAY(o.delivery_date) = 5 THEN 'Samedi'
+        WHEN WEEKDAY(o.delivery_date) = 6 THEN 'Dimanche'
+        ELSE NULL
+    END AS day_of_week,
+    'Rupture' AS type
+FROM orders o
+JOIN order_details od ON od.order_id = o.id
+JOIN stocks s ON s.id = od.stock_id
+JOIN products p ON p.id = s.countable_id
+JOIN product_standards ps ON p.product_standard_id = ps.id
+WHERE od.reason_delete = 'rupture'
+AND WEEK(o.delivery_date, 1) = WEEK('{comparison_date}',1)
+GROUP BY WEEKDAY(o.delivery_date), CEIL(DATEDIFF(o.delivery_date, '2023-01-01') / 7), ps.id
+
+UNION ALL
+
+SELECT
+    WEEKDAY(i.created_at) AS week_day,
+    CEIL(DATEDIFF(i.created_at, '2023-01-01') / 7) AS week,
+    ROUND(SUM(i.quantity)) AS total_weight,
+    ps.id AS standard_id,
+    ps.name AS standard_name,
+    CASE
+        WHEN WEEKDAY(i.created_at) = 0 THEN 'Lundi'
+        WHEN WEEKDAY(i.created_at) = 1 THEN 'Mardi'
+        WHEN WEEKDAY(i.created_at) = 2 THEN 'Mercredi'
+        WHEN WEEKDAY(i.created_at) = 3 THEN 'Jeudi'
+        WHEN WEEKDAY(i.created_at) = 4 THEN 'Vendredi'
+        WHEN WEEKDAY(i.created_at) = 5 THEN 'Samedi'
+        WHEN WEEKDAY(i.created_at) = 6 THEN 'Dimanche'
+        ELSE NULL
+    END AS day_of_week,
+    'Stock' AS type
+FROM inventories i
+JOIN products p ON i.product_id = p.id
+JOIN product_standards ps ON ps.id = p.product_standard_id
+WHERE WEEK(DATE_FORMAT(i.created_at, '%Y-%m-%d')) = WEEK('{comparison_date}',1)
+GROUP BY WEEKDAY(i.created_at), CEIL(DATEDIFF(i.created_at, '2023-01-01') / 7), ps.id;
 
 """
 
@@ -313,17 +367,50 @@ st.download_button(
     mime='text/csv')
 
 
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
+
 def plot_standard_name_report(df, standard_name):
+    """
+    Function to plot the values of different types for a given standard_name
+    with fixed colors and days of the week on the x-axis.
+
+    :param df: The DataFrame containing the data
+    :param standard_name: The name of the standard to plot
+    :return: Matplotlib figure object
+    """
+    # Filter the data for the given standard_name
     df_filtered = df[df['standard_name'] == standard_name]
 
+    # Define color codes for each type
+    color_mapping = {
+        'Ventes': '#008000',      # Green
+        '75%': '#0000FF',         # Blue
+        'Achats': '#FFA500',      # Orange
+        'Historique': '#8B4513',  # Brown
+        'Stock': '#800080',       # Purple
+        'Rupture': '#FF0000'      # Red
+    }
+
+    # Days of the week in the correct order
     days_of_week = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
 
+    # Create the plot
     plt.figure(figsize=(10, 6))
 
+    # Iterate through each 'type' and plot a line with the specific color
     for t in df_filtered['type'].unique():
         df_type = df_filtered[df_filtered['type'] == t]
-        plt.plot(days_of_week, df_type[days_of_week].values.flatten(), label=t, marker='o')
+        plt.plot(
+            days_of_week,
+            df_type[days_of_week].values.flatten(),
+            label=t,
+            marker='o',
+            color=color_mapping.get(t, '#000000')  # Default to black if type is not found
+        )
 
+    # Add title and labels
     plt.title(f'Performances {standard_name}')
     plt.xlabel('Jour Semaine')
     plt.ylabel('Poids Total')
@@ -333,21 +420,32 @@ def plot_standard_name_report(df, standard_name):
     return plt.gcf()
 
 def save_plots_as_html(df):
+    """
+    Function to save plots as HTML with embedded images.
+
+    :param df: The DataFrame containing the data
+    :return: HTML content with embedded plots
+    """
     html_content = "<html><body>\n"
 
+    # Generate and save each plot for each standard_name in HTML format
     for name in df['standard_name'].unique():
         fig = plot_standard_name_report(df, name)
 
+        # Save figure to buffer
         buffer = BytesIO()
         fig.savefig(buffer, format="png")
         buffer.seek(0)
         img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
+
+        # Embed plot in HTML
         html_content += f"<h2>{name}</h2>\n"
         html_content += f'<img src="data:image/png;base64,{img_str}"/>\n'
 
     html_content += "</body></html>"
 
     return html_content
+
 
 st.divider()
 st.caption("Tableau de Comparaison")
