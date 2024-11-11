@@ -323,7 +323,7 @@ SELECT
 FROM inventories i
 JOIN products p ON i.product_id = p.id
 JOIN product_standards ps ON ps.id = p.product_standard_id
-WHERE WEEK(DATE_FORMAT(i.created_at, '%Y-%m-%d')) = WEEK('{comparison_date}',1)
+WHERE WEEK(DATE_FORMAT(i.created_at, '%Y-%m-%d'), 1) = WEEK('{comparison_date}',1)
 AND ps.id IN ({standard_ids_str})
 GROUP BY WEEKDAY(i.created_at), CEIL(DATEDIFF(i.created_at, '2023-01-01') / 7), ps.id;
 
