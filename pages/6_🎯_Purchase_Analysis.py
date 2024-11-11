@@ -5,6 +5,7 @@ from operator import attrgetter
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+import plotly.graph_objects as go
 import numpy as np
 from mlxtend.frequent_patterns import apriori
 from mlxtend.frequent_patterns import association_rules
@@ -421,6 +422,7 @@ def plot_standard_name_report(df, standard_name):
 
     return plt.gcf()
 
+
 def save_plots_as_html(df):
     """
     Function to save plots as HTML with embedded images.
@@ -449,6 +451,59 @@ def save_plots_as_html(df):
     return html_content
 
 
+def plot_standard_name_report(df, standard_name):
+    """
+    Function to create an interactive plot of values for different types for a given standard_name
+    with fixed colors and days of the week on the x-axis using Plotly.
+
+    :param df: The DataFrame containing the data
+    :param standard_name: The name of the standard to plot
+    :return: Plotly Figure object
+    """
+    # Filter the data for the given standard_name
+    df_filtered = df[df['standard_name'] == standard_name]
+
+    # Define color codes for each type
+    color_mapping = {
+        'Ventes': '#008000',      # Green
+        '75%': '#0000FF',         # Blue
+        'Achats': '#FFA500',      # Orange
+        'Historique': '#8B4513',  # Brown
+        'Stock': '#800080',       # Purple
+        'Rupture': '#FF0000'      # Red
+    }
+
+    # Days of the week in the correct order
+    days_of_week = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+
+    # Create an interactive figure
+    fig = go.Figure()
+
+    # Iterate through each 'type' and plot a line with the specific color
+    for t in df_filtered['type'].unique():
+        df_type = df_filtered[df_filtered['type'] == t]
+        fig.add_trace(
+            go.Scatter(
+                x=days_of_week,
+                y=df_type[days_of_week].values.flatten(),
+                mode='lines+markers',
+                name=t,
+                line=dict(color=color_mapping.get(t, '#000000')),  # Default to black if type is not found
+            )
+        )
+
+    # Update layout for better visualization
+    fig.update_layout(
+        title=f'Performances {standard_name}',
+        xaxis_title='Jour Semaine',
+        yaxis_title='Poids Total',
+        legend_title='Type',
+        template="plotly_white"
+    )
+
+    return fig
+
+
 st.divider()
 
 st.caption("Tableau de Comparaison")
@@ -457,7 +512,8 @@ with st.expander("Voir Graphs de Comparaisons"):
     for name in merged_table['standard_name'].unique():
         st.subheader(f"{name}")
         fig = plot_standard_name_report(merged_table, name)
-        st.pyplot(fig)
+        st.plotly_chart(fig, use_container_width=True)
+
 
 html_file_content = save_plots_as_html(merged_table)
 st.download_button(
