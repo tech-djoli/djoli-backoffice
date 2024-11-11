@@ -298,6 +298,7 @@ JOIN products p ON p.id = s.countable_id
 JOIN product_standards ps ON p.product_standard_id = ps.id
 WHERE od.reason_delete = 'rupture'
 AND WEEK(o.delivery_date, 1) = WEEK('{comparison_date}',1)
+AND ps.id IN ({standard_ids_str})
 GROUP BY WEEKDAY(o.delivery_date), CEIL(DATEDIFF(o.delivery_date, '2023-01-01') / 7), ps.id
 
 UNION ALL
@@ -323,6 +324,7 @@ FROM inventories i
 JOIN products p ON i.product_id = p.id
 JOIN product_standards ps ON ps.id = p.product_standard_id
 WHERE WEEK(DATE_FORMAT(i.created_at, '%Y-%m-%d')) = WEEK('{comparison_date}',1)
+AND ps.id IN ({standard_ids_str})
 GROUP BY WEEKDAY(i.created_at), CEIL(DATEDIFF(i.created_at, '2023-01-01') / 7), ps.id;
 
 """
