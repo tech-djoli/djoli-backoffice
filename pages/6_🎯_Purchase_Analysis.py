@@ -451,7 +451,7 @@ def save_plots_as_html(df):
     return html_content
 
 
-def plot_standard_name_report(df, standard_name):
+def plot_standard_name_report_interactive(df, standard_name):
     """
     Function to create an interactive plot of values for different types for a given standard_name
     with fixed colors and days of the week on the x-axis using Plotly.
@@ -511,7 +511,7 @@ with st.expander("Voir Graphs de Comparaisons"):
     st.subheader("Comparaison par Produit")
     for name in merged_table['standard_name'].unique():
         st.subheader(f"{name}")
-        fig = plot_standard_name_report(merged_table, name)
+        fig = plot_standard_name_report_interactive(merged_table, name)
         st.plotly_chart(fig, use_container_width=True)
 
 
