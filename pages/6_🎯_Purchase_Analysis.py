@@ -448,6 +448,7 @@ def save_plots_as_html(df):
 
 
 st.divider()
+
 st.caption("Tableau de Comparaison")
 with st.expander("Voir Graphs de Comparaisons"):
     st.subheader("Comparaison par Produit")
