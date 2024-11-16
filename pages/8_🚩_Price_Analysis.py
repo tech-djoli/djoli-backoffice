@@ -5,6 +5,11 @@ import sqlite3
 import mysql.connector as connection
 from sshtunnel import SSHTunnelForwarder
 
+SSH_USERNAME = st.secrets["SSH_USERNAME"]
+SSH_PASSWORD = st.secrets["SSH_PASSWORD"]
+DB_USER = st.secrets["DB_USER"]
+DB_PASSWORD = st.secrets["DB_PASSWORD"]
+
   # Assuming you're using SQLite, change to your database connection method
 tunnel = SSHTunnelForwarder(
     ('31.207.38.195', 22),
