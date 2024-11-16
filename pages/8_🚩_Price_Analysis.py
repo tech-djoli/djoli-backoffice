@@ -93,7 +93,7 @@ fig.add_scatter(x=merged_df['week'],
                 line=dict(color='green'))
 
 # Plot purchase price curves by origin with custom colors
-for origin, color in zip(['Adjamé', 'Bord champ', 'Supermarché'], ['orange', 'yellow', 'red']):
+for origin, color in zip(['Adjamé', 'Bord champ', 'Supermarché'], ['orange', 'darkyellow', 'red']):
     origin_data = merged_df[merged_df['origin'] == origin]
     fig.add_scatter(x=origin_data['week'],
                     y=origin_data['unit_price_y'],  # Purchase price
