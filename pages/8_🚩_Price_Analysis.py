@@ -47,16 +47,20 @@ GROUP BY ps.id, WEEK(o.delivery_date, 1);
 """
 
 purchases = """
-SELECT
+SELECT 
     WEEK(p.created_at, 1) AS week,
     ps.id,
     ps.name,
-    ROUND(AVG(sm.price)) AS unit_price,
-    p.origin
-FROM purchases p
-JOIN stock_movements sm ON sm.purchase_id = p.id
+    ROUND(
+        CASE 
+            WHEN ps.id IN (24, 25, 32) THEN AVG(sm.price) / 25
+            ELSE AVG(sm.price)
+        END
+    ) AS unit_price,
+    p.origin 
+FROM purchases p 
+JOIN stock_movements sm ON sm.purchase_id = p.id 
 JOIN product_standards ps ON p.product_standard_id = ps.id
-WHERE p.deleted_at IS NULL AND DATE_FORMAT(p.date, '%Y-%m-%d') < '2024-11-01'
 GROUP BY ps.id, WEEK(p.created_at, 1), p.origin;
 """
 
