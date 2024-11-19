@@ -48,7 +48,7 @@ GROUP BY ps.id, MONTH(o.delivery_date);
 
 purchases = """
 SELECT 
-    MONTH(p.created_at, 1) AS month,
+    MONTH(p.created_at) AS month,
     ps.id,
     ps.name,
     ROUND(
