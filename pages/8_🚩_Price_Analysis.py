@@ -55,6 +55,7 @@ SELECT
 FROM purchases p
 JOIN stock_movements sm ON sm.purchase_id = p.id
 JOIN product_standards ps ON p.product_standard_id = ps.id
+WHERE p.deleted_at IS NULL
 GROUP BY ps.id, WEEK(p.created_at, 1), p.origin;
 """
 
