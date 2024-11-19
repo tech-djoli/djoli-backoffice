@@ -92,7 +92,7 @@ fig = px.line(merged_df,
               color_discrete_sequence=['green'])  # Green line for Sales Price
 
 # Adding the sales price line explicitly to the legend
-fig.add_scatter(x=merged_df['week'],
+fig.add_scatter(x=merged_df['month'],
                 y=merged_df['unit_price_x'],  # Sales price
                 mode='lines',
                 name='Sales Price',  # Add to legend
