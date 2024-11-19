@@ -33,7 +33,7 @@ mydb = connection.connect(
 
 sales = """
 SELECT
-    MONTH(o.delivery_date) AS month,
+    WEEK(o.delivery_date, 1) AS week,
     ps.id,
     ps.name AS product,
     ROUND(AVG(od.unit_price/p.weight)) AS unit_price
@@ -43,12 +43,12 @@ JOIN stocks s ON s.id = od.stock_id
 JOIN products p ON p.id = s.countable_id
 JOIN product_standards ps ON ps.id = p.product_standard_id
 WHERE o.delivery_date < '2024-11-01'
-GROUP BY ps.id, MONTH(o.delivery_date);
+GROUP BY ps.id, WEEK(o.delivery_date, 1);
 """
 
 purchases = """
 SELECT 
-    MONTH(p.created_at) AS month,
+    WEEK(o.delivery_date, 1) AS week,
     ps.id,
     ps.name,
     ROUND(
@@ -61,7 +61,7 @@ SELECT
 FROM purchases p 
 JOIN stock_movements sm ON sm.purchase_id = p.id 
 JOIN product_standards ps ON p.product_standard_id = ps.id
-GROUP BY ps.id, MONTH(p.created_at), p.origin;
+GROUP BY ps.id, WEEK(o.delivery_date, 1), p.origin;
 """
 
 # Fetch data from the database
@@ -80,19 +80,19 @@ sales_df_filtered = sales_df[sales_df['id'] == selected_product_id]
 purchases_df_filtered = purchases_df[purchases_df['id'] == selected_product_id]
 
 # Merge sales and purchases data on 'week' and 'id'
-merged_df = pd.merge(sales_df_filtered, purchases_df_filtered, on=['month', 'id'], how='left')
+merged_df = pd.merge(sales_df_filtered, purchases_df_filtered, on=['week', 'id'], how='left')
 
 # Create the plot for Sales Price (green)
 fig = px.line(merged_df,
-              x='month',
+              x='week',
               y='unit_price_x',  # Sales price
-              title=f'Sales vs Purchase Prices for {selected_product} by Month',
-              labels={'unit_price_x': 'Sales Price', 'month': 'Month'},
+              title=f'Sales vs Purchase Prices for {selected_product} by Week',
+              labels={'unit_price_x': 'Sales Price', 'week': 'Week'},
               line_shape='linear',
               color_discrete_sequence=['green'])  # Green line for Sales Price
 
 # Adding the sales price line explicitly to the legend
-fig.add_scatter(x=merged_df['month'],
+fig.add_scatter(x=merged_df['week'],
                 y=merged_df['unit_price_x'],  # Sales price
                 mode='lines',
                 name='Sales Price',  # Add to legend
@@ -101,15 +101,15 @@ fig.add_scatter(x=merged_df['month'],
 # Plot purchase price curves by origin with custom colors
 for origin, color in zip(['Adjamé', 'Bord champ', 'Supermarché'], ['orange', 'gold', 'orangered']):
     origin_data = merged_df[merged_df['origin'] == origin]
-    fig.add_scatter(x=origin_data['month'],
+    fig.add_scatter(x=origin_data['week'],
                     y=origin_data['unit_price_y'],  # Purchase price
                     mode='lines',
                     name=f'Purchase Price - {origin}',
                     line=dict(dash='dot', color=color))  # Set custom color and dashed line
 
 # Update layout for better visualization
-fig.update_layout(title=f'Sales and Purchase Prices for {selected_product} by Month',
-                  xaxis_title='Month',
+fig.update_layout(title=f'Sales and Purchase Prices for {selected_product} by Week',
+                  xaxis_title='Week',
                   yaxis_title='Price (FCFA)',
                   template='plotly_dark')
 
