@@ -48,7 +48,7 @@ GROUP BY ps.id, WEEK(o.delivery_date, 1);
 
 purchases = """
 SELECT 
-    WEEK(o.delivery_date, 1) AS week,
+    WEEK(p.created_at, 1) AS week,
     ps.id,
     ps.name,
     ROUND(
@@ -61,7 +61,7 @@ SELECT
 FROM purchases p 
 JOIN stock_movements sm ON sm.purchase_id = p.id 
 JOIN product_standards ps ON p.product_standard_id = ps.id
-GROUP BY ps.id, WEEK(o.delivery_date, 1), p.origin;
+GROUP BY ps.id, WEEK(p.created_at, 1), p.origin;
 """
 
 # Fetch data from the database
