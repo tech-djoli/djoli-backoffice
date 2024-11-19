@@ -42,6 +42,7 @@ JOIN order_details od ON od.order_id = o.id
 JOIN stocks s ON s.id = od.stock_id
 JOIN products p ON p.id = s.countable_id
 JOIN product_standards ps ON ps.id = p.product_standard_id
+WHERE o.delivery_date < '2024-11-01'
 GROUP BY ps.id, WEEK(o.delivery_date, 1);
 """
 
@@ -55,7 +56,7 @@ SELECT
 FROM purchases p
 JOIN stock_movements sm ON sm.purchase_id = p.id
 JOIN product_standards ps ON p.product_standard_id = ps.id
-WHERE p.deleted_at IS NULL
+WHERE p.deleted_at IS NULL AND DATE_FORMAT(p.date, '%Y-%m-%d') < '2024-11-01'
 GROUP BY ps.id, WEEK(p.created_at, 1), p.origin;
 """
 
