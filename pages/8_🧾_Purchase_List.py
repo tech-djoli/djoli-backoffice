@@ -415,4 +415,19 @@ purchase_text = generate_purchase_text(merged_df, stock_extras_df, selected_date
 
     # Display the text in Streamlit
 st.text_area("Liste d'Achats", purchase_text, height=400)
+text_file = StringIO(purchase_text)
+    st.download_button(
+        label="Télécharger en format texte",
+        data=text_file.getvalue(),
+        file_name=f"Liste_d_Achats_{date_purchases}.txt",
+        mime="text/plain"
+    )
 
+    # Add a download button for HTML file
+html_content = f"<pre>{purchase_text}</pre>"
+st.download_button(
+    label="Télécharger en format HTML",
+    data=html_content,
+    file_name=f"Liste_d_Achats_{date_purchases}.html",
+    mime="text/html"
+    )
