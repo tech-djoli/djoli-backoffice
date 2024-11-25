@@ -140,6 +140,8 @@ def generate_top_sales():
 
 
 def generate_predictions():
+
+    pivot_table = generate_top_sales()
     # Reset the index without inserting it into the columns
     pivot_table = pivot_table.reset_index(drop=True)
 
