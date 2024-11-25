@@ -421,7 +421,7 @@ text_file = StringIO(purchase_text)
 st.download_button(
     label="Télécharger en format texte",
     data=text_file.getvalue(),
-    file_name=f"Liste_d_Achats_{date_purchases}.txt",
+    file_name=f"Liste_d_Achats_{selected_date}.txt",
     mime="text/plain"
     )
 
@@ -430,6 +430,6 @@ html_content = f"<pre>{purchase_text}</pre>"
 st.download_button(
     label="Télécharger en format HTML",
     data=html_content,
-    file_name=f"Liste_d_Achats_{date_purchases}.html",
+    file_name=f"Liste_d_Achats_{selected_date}.html",
     mime="text/html"
     )
