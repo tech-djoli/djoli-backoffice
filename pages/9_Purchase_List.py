@@ -400,10 +400,9 @@ def generate_purchase_text(merged_df, stock_extras_df, date_purchases):
     return purchase_text
 
 expanded_pivot_table = generate_predictions()
-st.table(expanded_pivot_table)
 filtered_df = filter_expanded_pivot_table(expanded_pivot_table, selected_date)
 merged_df = process_purchases(purchases_df, filtered_df)
-purchase_text = generate_purchase_text(merged_df, stock_extras_df, date_purchases.strftime('%Y-%m-%d'))
+purchase_text = generate_purchase_text(merged_df, stock_extras_df, selected_date)
 
     # Display the text in Streamlit
 st.text_area("Liste d'Achats", purchase_text, height=400)
