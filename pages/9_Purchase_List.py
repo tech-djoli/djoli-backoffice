@@ -179,9 +179,6 @@ def generate_predictions():
     # Drop the unnecessary 'index' columns if they exist
     expanded_pivot_table.drop(columns=['index', 'level_0'], errors='ignore', inplace=True)
 
-    # Reset index to ensure proper formatting
-    expanded_pivot_table.reset_index(drop=True, inplace=True)
-
     # Display only the rows with type '75%'
     expanded_pivot_table = expanded_pivot_table[expanded_pivot_table['type'] == '75%']
 
