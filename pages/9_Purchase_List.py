@@ -12,8 +12,7 @@ from mlxtend.frequent_patterns import association_rules
 import re
 import pulp
 import streamlit as st
-from datetime import datetime
-from datetime import date
+from datetime import datetime, date, timedelta
 from io import BytesIO
 import base64
 import math
@@ -44,8 +43,17 @@ mydb = connection.connect(
     use_pure=True
 )
 
+def closest_past_sunday(selected_date):
+    # Find the difference in days between the selected_date and the closest Sunday
+    days_since_sunday = selected_date.weekday() + 1  # Monday is 0, Sunday is 6
+    # Subtract the days to get the closest past Sunday
+    past_sunday = selected_date - timedelta(days=days_since_sunday)
+    return past_sunday
+
+
 current_date = date.today()
 selected_date = st.date_input("Date de Prédiction", value=current_date)
+past_sunday = closest_past_sunday(selected_date)
 
 query_top_sales = f"""WITH sales_data AS (
     SELECT
@@ -65,9 +73,9 @@ query_top_sales = f"""WITH sales_data AS (
         SELECT ROUND(SUM(od.total_price)) AS total_sum
         FROM backend.orders bo
         JOIN backend.order_details od ON od.order_id = bo.id
-        WHERE bo.delivery_date BETWEEN DATE_SUB('{selected_date}', INTERVAL 3 WEEK) AND '{selected_date}'
+        WHERE bo.delivery_date BETWEEN DATE_SUB('{past_sunday}', INTERVAL 3 WEEK) AND '{past_sunday}'
     ) AS totals
-    WHERE bo.delivery_date BETWEEN DATE_SUB('{selected_date}', INTERVAL 3 WEEK) AND '{selected_date}'
+    WHERE bo.delivery_date BETWEEN DATE_SUB('{past_sunday}', INTERVAL 3 WEEK) AND '{past_sunday}'
     GROUP BY ps.id, totals.total_sum
 ), ranked_data AS (
     SELECT
@@ -107,7 +115,7 @@ JOIN backend.product_translations pt ON pt.product_id = sk.countable_id
 JOIN backend.products p ON p.id = sk.countable_id
 JOIN backend.product_standards ps ON ps.id = p.product_standard_id
 JOIN backend.category_translations ct ON ct.category_id = p.category_id
-WHERE bo.delivery_date BETWEEN DATE_SUB('{selected_date}', INTERVAL 3 WEEK) AND '{selected_date}'
+WHERE bo.delivery_date BETWEEN DATE_SUB('{past_sunday}', INTERVAL 3 WEEK) AND '{past_sunday}'
 AND ps.id IN ({standard_ids_str})
 GROUP BY WEEKDAY(bo.delivery_date), CEIL(DATEDIFF(bo.delivery_date, '2023-01-01') / 7), ps.id
 ORDER BY week_day, week, total_weight DESC
