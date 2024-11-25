@@ -127,7 +127,7 @@ def generate_top_sales():
     volumes_top_sales = pd.read_sql(query_top_volumes, mydb)
     cleaned_volumes = volumes_top_sales.groupby(['standard_id', 'day_of_week'], group_keys=False).apply(remove_outliers, 'total_weight')
     pivot_table = cleaned_volumes.pivot_table(
-        index='standard_name',
+        index='standard_id',
         columns='day_of_week',
         values='total_weight',
         aggfunc='mean'
