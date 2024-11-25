@@ -179,9 +179,27 @@ def generate_predictions():
     # Drop the unnecessary 'index' columns if they exist
     expanded_pivot_table.drop(columns=['index', 'level_0'], errors='ignore', inplace=True)
 
+    # Reset index to ensure proper formatting
+    expanded_pivot_table.reset_index(drop=True, inplace=True)
+
     # Display only the rows with type '75%'
     expanded_pivot_table = expanded_pivot_table[expanded_pivot_table['type'] == '75%']
 
+
+    return expanded_pivot_table
+
+def filter_expanded_pivot_table(expanded_pivot_table, selected_date):
+    """
+    Filter the expanded pivot table for the selected day of the week.
+
+    Args:
+        expanded_pivot_table (pd.DataFrame): The expanded pivot table with days as columns.
+        selected_date (datetime.date): The selected date to determine the day of the week.
+
+    Returns:
+        pd.DataFrame: Filtered DataFrame with 'standard_id' and 'day_value'.
+    """
+    # Get the day of the week (0=Monday, ..., 6=Sunday)
     day_of_week = selected_date.weekday()
 
     # Select only the relevant columns: 'standard_id', the numeric day column, and 'type'
@@ -190,9 +208,7 @@ def generate_predictions():
     # Rename the numeric day column to 'day_value' for clarity
     filtered_df.rename(columns={day_of_week: 'day_value'}, inplace=True)
 
-
     return filtered_df
-
 
 purchases = f"""
 SELECT
@@ -383,7 +399,9 @@ def generate_purchase_text(merged_df, stock_extras_df, date_purchases):
 
     return purchase_text
 
-filtered_df = generate_predictions()
+expanded_pivot_table = generate_predictions()
+st.table(expanded_pivot_table)
+filtered_df = filter_expanded_pivot_table(expanded_pivot_table, selected_date)
 merged_df = process_purchases(purchases_df, filtered_df)
 purchase_text = generate_purchase_text(merged_df, stock_extras_df, date_purchases.strftime('%Y-%m-%d'))
 
