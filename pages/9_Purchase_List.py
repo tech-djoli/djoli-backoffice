@@ -45,7 +45,7 @@ mydb = connection.connect(
 current_date = date.today()
 selected_date = st.date_input("Date de Prédiction", value=current_date)
 
-quer_top_sales = f"""WITH sales_data AS (
+query_top_sales = f"""WITH sales_data AS (
     SELECT
         ps.name AS standard_name,
         ps.id AS standard_id,
