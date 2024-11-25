@@ -13,7 +13,7 @@ import re
 import pulp
 import streamlit as st
 from datetime import datetime, date, timedelta
-from io import Bytes, StringIO
+from io import StringIO
 
 import base64
 import math
