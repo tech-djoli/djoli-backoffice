@@ -140,28 +140,46 @@ def generate_top_sales():
 
 
 def generate_predictions():
-    pivot_table = generate_top_sales()
+    # Reset the index without inserting it into the columns
+    pivot_table = pivot_table.reset_index(drop=True)
 
+    # Get the numeric representation of days of the week from the columns
+    day_order = [col for col in pivot_table.columns if isinstance(col, int)]  # Numeric days (0 for Monday, ..., 6 for Sunday)
+
+    # Create a new DataFrame to store the modified data with the 75% buffer rows
     new_rows = []
 
+    # Iterate over each row of the original pivot_table
     for idx, row in pivot_table.iterrows():
+        # Append the original row with 'Historique' type to the new_rows list
         original_row = row.copy()
         original_row['type'] = 'Historique'
         new_rows.append(original_row)
 
+        # Create a new row with the same values but multiplied by 0.75
         new_row = row.copy()
         new_row['type'] = '75%'  # Set the 'type' column to '75%'
 
+        # Multiply each value for the days of the week by 0.75
         for day in day_order:
+            # Handle NaN values by replacing them with 0 before multiplication
             value = row[day] if pd.notna(row[day]) else 0
-        new_rowsnew_row[day] = int(round(value * 0.75, 0))
+            # Use Python's built-in round() function instead of .round()
+            new_row[day] = int(round(value * 0.75, 0))
 
+        # Append the new 75% row to the new_rows list
         new_rows.append(new_row)
 
+    # Create a new DataFrame from the new_rows list
     expanded_pivot_table = pd.DataFrame(new_rows)
-    columns_order = ['standard_name', 'type'] + day_order
-    expanded_pivot_table = expanded_pivot_table[columns_order]
+
+    # Drop the unnecessary 'index' columns if they exist
+    expanded_pivot_table.drop(columns=['index', 'level_0'], errors='ignore', inplace=True)
+
+    # Reset index to ensure proper formatting
     expanded_pivot_table.reset_index(drop=True, inplace=True)
+
+    # Display only the rows with type '75%'
     expanded_pivot_table = expanded_pivot_table[expanded_pivot_table['type'] == '75%']
 
     day_of_week = datetime.strptime(selected_date, '%Y-%m-%d').weekday()
