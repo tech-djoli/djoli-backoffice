@@ -12,7 +12,7 @@ from mlxtend.frequent_patterns import association_rules
 import re
 import pulp
 import streamlit as st
-from datetime import date
+from datetime import datetime
 from io import BytesIO
 import base64
 
