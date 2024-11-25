@@ -185,9 +185,14 @@ def generate_predictions():
     # Display only the rows with type '75%'
     expanded_pivot_table = expanded_pivot_table[expanded_pivot_table['type'] == '75%']
 
-    day_of_week = day_of_week = selected_date.weekday()
+    day_of_week = selected_date.weekday()
+
+    # Select only the relevant columns: 'standard_id', the numeric day column, and 'type'
     filtered_df = expanded_pivot_table[['standard_id', day_of_week, 'type']]
+
+    # Rename the numeric day column to 'day_value' for clarity
     filtered_df.rename(columns={day_of_week: 'day_value'}, inplace=True)
+
 
     return filtered_df
 
