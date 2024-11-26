@@ -179,7 +179,7 @@ def generate_predictions():
             # Handle NaN values by replacing them with 0 before multiplication
             value = row[day] if pd.notna(row[day]) else 0
             # Use Python's built-in round() function instead of .round()
-            new_row[day] = int(round(value * 0.75, 0))
+            new_row[day] = int(round(value * 0.9, 0))
 
         # Append the new 75% row to the new_rows list
         new_rows.append(new_row)
