@@ -56,7 +56,7 @@ df = df.dropna()
 # Create a dictionary to map standard_name to standard_id
 standard_map = dict(zip(df['standard_name'], df['standard_id']))
 
-default_index = standard_ids.index(1) if 1 in standard_ids else 0 
+default_index = list(df['standard_id']).index(1) if 1 in df['standard_id'].values else 0
 
 # Streamlit selectbox to display unique standard names
 selected_standard_name = st.selectbox(
