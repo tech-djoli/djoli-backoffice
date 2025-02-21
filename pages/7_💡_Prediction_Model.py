@@ -53,13 +53,10 @@ GROUP BY WEEK(o.delivery_date, 1), ps.id;
 df = pd.read_sql(query, mydb)
 df = df.dropna()
 
-st.table(df)
-
 # Create a dictionary to map standard_name to standard_id
 standard_map = dict(zip(df['standard_name'], df['standard_id']))
 
-default_index = list(df['standard_id']).index(1)
-
+default_index = standard_ids.index(1) if 1 in standard_ids else 0 
 
 # Streamlit selectbox to display unique standard names
 selected_standard_name = st.selectbox(
