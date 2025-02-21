@@ -53,6 +53,8 @@ GROUP BY WEEK(o.delivery_date, 1), ps.id;
 df = pd.read_sql(query, mydb)
 df = df.dropna()
 
+st.table(df)
+
 # Create a dictionary to map standard_name to standard_id
 standard_map = dict(zip(df['standard_name'], df['standard_id']))
 
