@@ -15,12 +15,16 @@ import streamlit as st
 from datetime import date
 from io import BytesIO
 import base64
+from dotenv import load_dotenv
+import os
 
-SSH_USERNAME = st.secrets["SSH_USERNAME"]
-SSH_PASSWORD = st.secrets["SSH_PASSWORD"]
-DB_USER = st.secrets["DB_USER"]
-DB_PASSWORD = st.secrets["DB_PASSWORD"]
-GOOGLE_MAPS_API_KEY = st.secrets["GOOGLE_MAPS_API_KEY"]
+load_dotenv()
+
+SSH_USERNAME = os.getenv("SSH_USERNAME")
+SSH_PASSWORD = os.getenv("SSH_PASSWORD")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
 tunnel = SSHTunnelForwarder(
     ('31.207.38.195', 22),
