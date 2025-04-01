@@ -14,15 +14,19 @@ import math
 from datetime import datetime, timedelta
 import googlemaps
 import io
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 st.set_page_config(page_title="Customer Map", page_icon="1️⃣")
 
 
-SSH_USERNAME = st.secrets["SSH_USERNAME"]
-SSH_PASSWORD = st.secrets["SSH_PASSWORD"]
-DB_USER = st.secrets["DB_USER"]
-DB_PASSWORD = st.secrets["DB_PASSWORD"]
-GOOGLE_MAPS_API_KEY = st.secrets["GOOGLE_MAPS_API_KEY"]
+SSH_USERNAME = os.getenv("SSH_USERNAME")
+SSH_PASSWORD = os.getenv("SSH_PASSWORD")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
 st.title("Routes de livraison")
 
