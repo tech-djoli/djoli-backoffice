@@ -265,7 +265,8 @@ SELECT
     'Achats' AS type
 FROM backend.stock_movements sm
 JOIN purchases p ON p.id = sm.purchase_id
-JOIN backend.product_standards ps ON ps.id = p.product_standard_id
+JOIN purchase_details pd ON pd.purchase_id = p.id
+JOIN backend.product_standards ps ON ps.id = pd.product_standard_id
 WHERE WEEK(p.created_at, 1) = WEEK('{comparison_date}',1)
 AND sm.type = 'purchase'
 AND sm.deleted_at IS NULL
